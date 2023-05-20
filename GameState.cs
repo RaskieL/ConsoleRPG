@@ -1,4 +1,4 @@
-namespace Jeu_Test{
+namespace ConsoleRPG{
 
     public class GameState{
         static public List<string> Gamestates = new List<string>{};

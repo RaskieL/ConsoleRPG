@@ -1,4 +1,4 @@
-namespace Jeu_Test{
+namespace ConsoleRPG{
     public class Enemy {
         private static int currentID;
         public string Name;

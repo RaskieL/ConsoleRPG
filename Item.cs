@@ -1,4 +1,4 @@
-namespace Jeu_Test{
+namespace ConsoleRPG{
    public class Item {
 
         private static int currentID;

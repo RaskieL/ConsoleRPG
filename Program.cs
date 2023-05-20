@@ -1,4 +1,4 @@
-﻿namespace Jeu_Test {
+﻿namespace ConsoleRPG {
     class Base {
         static public void Main(string[] args) {
             Console.Clear();

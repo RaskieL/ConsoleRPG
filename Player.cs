@@ -1,5 +1,4 @@
-namespace Jeu_Test
-{
+namespace ConsoleRPG{
     public class Player
     {
         public Player(string name)
