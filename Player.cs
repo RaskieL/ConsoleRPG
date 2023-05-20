@@ -26,6 +26,8 @@ namespace ConsoleRPG{
         public double Magical_Attack_Stat = 1;
         public int Mend_Wounds_Charges = 1;
 
+        public int Money = 0;
+
         public bool IsProtecting = false;
 
         public List<Item> Inventory = new List<Item>(20);
@@ -37,6 +39,14 @@ namespace ConsoleRPG{
         public void Update_Name(string name)
         {
             Name = name;
+        }
+
+        public void Earn_Money(int money){
+            Money += money;
+        }
+
+        public void Lose_Money(int money){
+            Money -= money;
         }
         public void Gain_XP(int xp)
         {
