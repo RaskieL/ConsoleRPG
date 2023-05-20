@@ -1,0 +1,2 @@
+H:\Code\Projets\C#\ConsoleRPG\bin\Debug\net7.0\win-x64\publish\ConsoleRPG.pdb
+H:\Code\Projets\C#\ConsoleRPG\bin\Debug\net7.0\win-x64\publish\ConsoleRPG.exe
