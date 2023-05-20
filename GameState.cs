@@ -4,7 +4,7 @@ namespace ConsoleRPG{
         static public List<string> Gamestates = new List<string>{};
         static public List<Enemy> Available_Enemies = new List<Enemy>();
 
-        static public Player Player1 = new Player("Unknown");
+        static public Player player = new Player("Unknown");
         static public void Update_Gamestate(string gamestate){
             switch(gamestate){
 
@@ -15,7 +15,7 @@ namespace ConsoleRPG{
 
                 case "Exploration":
                 Console.Clear();
-                Player1.Update_Mend_Wounds_Charges();
+                player.Update_Mend_Wounds_Charges();
                 Explore();
                 break;
 
@@ -87,7 +87,7 @@ namespace ConsoleRPG{
 
                 case <= 10:
                 Console.WriteLine("\nThere's nothing here, let's move on");
-                Player1.Current_Room += 1;
+                player.Current_Room += 1;
                 Console.WriteLine("Press enter to continue.");
                 Console.ReadLine();
                 Gamestates.Remove("Exploration");
@@ -97,7 +97,7 @@ namespace ConsoleRPG{
 
                 case <= 20:
                 Console.WriteLine("\nThere's some loot here, looks like you found a weapon");
-                Player1.Current_Room += 1;
+                player.Current_Room += 1;
                 Console.WriteLine("Press enter to continue.");
                 Console.ReadLine();
                 Gamestates.Remove("Exploration");
@@ -107,7 +107,7 @@ namespace ConsoleRPG{
 
                 case <= 30:
                 Console.WriteLine("\nThere's some loot here, looks like you found an armor");
-                Player1.Current_Room += 1;
+                player.Current_Room += 1;
                 Console.WriteLine("Press enter to continue.");
                 Console.ReadLine();
                 Gamestates.Remove("Exploration");
@@ -117,7 +117,7 @@ namespace ConsoleRPG{
 
                 case <= 40:
                 Console.WriteLine("\nThere's some loot here, looks like you found an item");
-                Player1.Current_Room += 1;
+                player.Current_Room += 1;
                 Console.WriteLine("Press enter to continue.");
                 Console.ReadLine();
                 Gamestates.Remove("Exploration");
@@ -127,7 +127,7 @@ namespace ConsoleRPG{
 
                 case <= 100:
                 Console.WriteLine("It looks like there are some enemies here.");
-                Player1.Current_Room += 1;
+                player.Current_Room += 1;
                 Gamestates.Remove("Exploration");
                 Gamestates.Add("Combat");
                 Update_Gamestate(Gamestates[0]);
@@ -158,7 +158,7 @@ namespace ConsoleRPG{
             int enemyseed = rnd.Next(0,Available_Enemies.Count);
             Enemy CurrentEnemy = Available_Enemies[enemyseed];
             CurrentEnemy.Reset_Enemies();
-            CurrentEnemy.Scale_Enemy(Player1);
+            CurrentEnemy.Scale_Enemy(player);
             Console.WriteLine($"You are in combat ! You encountered an enemy, it's a {CurrentEnemy.Name} !\nPress Enter to continue.");
             Console.ReadLine();
             bool InCombat = true;
@@ -169,24 +169,24 @@ namespace ConsoleRPG{
                 }catch(System.InvalidOperationException){}
             }
             if(IsPlayerFaster == true){
-                TurnOrder.Add(Player1);
+                TurnOrder.Add(player);
                 TurnOrder.Add(CurrentEnemy);
             }else if(IsPlayerFaster == false){
                 TurnOrder.Add(CurrentEnemy);
-                TurnOrder.Add(Player1);
+                TurnOrder.Add(player);
             }else{
                 int a = rnd.Next(0,2);
                 switch(a){
                     case 0:
-                    TurnOrder.Add(Player1);
+                    TurnOrder.Add(player);
                     TurnOrder.Add(CurrentEnemy);
                     break;
                     case 1:
                     TurnOrder.Add(CurrentEnemy);
-                    TurnOrder.Add(Player1);
+                    TurnOrder.Add(player);
                     break;
                     default:
-                    TurnOrder.Add(Player1);
+                    TurnOrder.Add(player);
                     TurnOrder.Add(CurrentEnemy);
                     break;
                 }
@@ -195,12 +195,12 @@ namespace ConsoleRPG{
                 switch(TurnOrder[0]){
                     case Player:
                     Combat_PlayerTurn(CurrentEnemy);
-                    if(!Player1.IsAlive || !CurrentEnemy.IsAlive ){
+                    if(!player.IsAlive || !CurrentEnemy.IsAlive ){
                         InCombat = false;
-                        if(Player1.IsAlive){
+                        if(player.IsAlive){
                             Console.Clear();
-                            Player1.Gain_XP(CurrentEnemy.XP_Reward);
-                            Player1.Update_Mend_Wounds_Charges();
+                            player.Gain_XP(CurrentEnemy.XP_Reward);
+                            player.Update_Mend_Wounds_Charges();
                             Console.WriteLine($"Awesome ! You vanquished the enemy {CurrentEnemy.Name} and gained {CurrentEnemy.XP_Reward} !");
                             Console.WriteLine("Press enter to continue.");
                             Console.ReadLine();
@@ -215,11 +215,11 @@ namespace ConsoleRPG{
                         }
                     }
                     Combat_EnemyTurn(CurrentEnemy);
-                    if(!Player1.IsAlive || !CurrentEnemy.IsAlive ){
+                    if(!player.IsAlive || !CurrentEnemy.IsAlive ){
                         InCombat = false;
-                        if(Player1.IsAlive){
+                        if(player.IsAlive){
                             Console.Clear();
-                            Player1.Gain_XP(CurrentEnemy.XP_Reward);
+                            player.Gain_XP(CurrentEnemy.XP_Reward);
                             Console.WriteLine($"Awesome ! You vanquished the enemy {CurrentEnemy.Name} and gained {CurrentEnemy.XP_Reward} !");
                             Console.WriteLine("Press enter to continue.");
                             Console.ReadLine();
@@ -237,12 +237,12 @@ namespace ConsoleRPG{
 
                     case Enemy:
                     Combat_EnemyTurn(CurrentEnemy);
-                    if(!Player1.IsAlive || !CurrentEnemy.IsAlive ){
+                    if(!player.IsAlive || !CurrentEnemy.IsAlive ){
                         InCombat = false;
-                        if(Player1.IsAlive){
+                        if(player.IsAlive){
                             Console.Clear();
-                            Player1.Gain_XP(CurrentEnemy.XP_Reward);
-                            Player1.Update_Mend_Wounds_Charges();
+                            player.Gain_XP(CurrentEnemy.XP_Reward);
+                            player.Update_Mend_Wounds_Charges();
                             Console.WriteLine($"Awesome ! You vanquished the enemy {CurrentEnemy.Name} and gained {CurrentEnemy.XP_Reward} !");
                             Console.WriteLine("Press enter to continue.");
                             Console.ReadLine();
@@ -257,12 +257,12 @@ namespace ConsoleRPG{
                         }
                     }
                     Combat_PlayerTurn(CurrentEnemy);
-                    if(!Player1.IsAlive || !CurrentEnemy.IsAlive ){
+                    if(!player.IsAlive || !CurrentEnemy.IsAlive ){
                         InCombat = false;
-                        if(Player1.IsAlive){
+                        if(player.IsAlive){
                             Console.Clear();
-                            Player1.Gain_XP(CurrentEnemy.XP_Reward);
-                            Player1.Update_Mend_Wounds_Charges();
+                            player.Gain_XP(CurrentEnemy.XP_Reward);
+                            player.Update_Mend_Wounds_Charges();
                             Console.WriteLine($"Awesome ! You vanquished the enemy {CurrentEnemy.Name} and gained {CurrentEnemy.XP_Reward} !");
                             Console.WriteLine("Press enter to continue.");
                             Console.ReadLine();
@@ -286,11 +286,11 @@ namespace ConsoleRPG{
         }
 
         public static void Combat_PlayerTurn(Enemy enemy){
-            Player1.IsProtecting = false;
+            player.IsProtecting = false;
             Console.Clear();
             Console.WriteLine("It's your turn !\n");
             Console.WriteLine("What do you want to do ?");
-            Console.WriteLine($"HP: {Player1.Current_HP}/{Player1.HP_Max}   Enemy {enemy.Name}'s HP: {enemy.Current_HP}/{enemy.HP_Max}\n");
+            Console.WriteLine($"HP: {player.Current_HP}/{player.HP_Max}   Enemy {enemy.Name}'s HP: {enemy.Current_HP}/{enemy.HP_Max}\n");
             Console.WriteLine("[1] - Attack");
             Console.WriteLine("[2] - Protect");
             Console.WriteLine("[3] - Use Item");
@@ -298,7 +298,7 @@ namespace ConsoleRPG{
             switch (Console.ReadLine()){
                 case "1":
                 Console.Clear();
-                Player1.Attack_Enemy(enemy);
+                player.Attack_Enemy(enemy);
                 Console.WriteLine($"You attacked the {enemy.Name}\nPress Enter to continuer.");
                 Console.ReadLine();
                 break;
@@ -306,7 +306,7 @@ namespace ConsoleRPG{
                 case "2":
                 Console.Clear();
                 Console.WriteLine("You are protecting yourself for the rest of your turn !");
-                Player1.Protect();
+                player.Protect();
                 Console.WriteLine("Press enter to continue.");
                 Console.ReadLine();
                 break;
@@ -320,14 +320,14 @@ namespace ConsoleRPG{
 
                 case "4":
                 Console.Clear();
-                if(Player1.Speed_Stat > enemy.Speed_Stat){
+                if(player.Speed_Stat > enemy.Speed_Stat){
                     Console.WriteLine("You managed to flee the combat");
                     Console.WriteLine("Press enter to continue.");
                     Console.ReadLine();
                     Gamestates.Remove("Combat");
                     Gamestates.Add("Menu");
                     Update_Gamestate(Gamestates[0]);
-                }else if(Player1.Speed_Stat < enemy.Speed_Stat){
+                }else if(player.Speed_Stat < enemy.Speed_Stat){
                     Console.WriteLine("You didn't manage to flee the combat");
                     Console.WriteLine("Press enter to continue.");
                     Console.ReadLine();
@@ -363,16 +363,16 @@ namespace ConsoleRPG{
         public static void Combat_EnemyTurn(Enemy enemy){
             Console.Clear();
             Console.WriteLine("It's the enemy's turn !");
-            enemy.Attack_Player(Player1);
+            enemy.Attack_Player(player);
             Console.WriteLine("They attacked you !\n");
             Console.WriteLine("Press enter to continue.");
             Console.ReadLine();
         }
 
         static bool? Combat_CheckSpeed(Enemy currentenemy){
-            if(Player1.Speed_Stat > currentenemy.Speed_Stat){
+            if(player.Speed_Stat > currentenemy.Speed_Stat){
                 return true;
-            }else if(Player1.Speed_Stat < currentenemy.Speed_Stat){
+            }else if(player.Speed_Stat < currentenemy.Speed_Stat){
                 return false;
             }else{
                 return null;
@@ -410,14 +410,11 @@ namespace ConsoleRPG{
             Console.WriteLine("Enter your character's name:");
                 string? player_name = Console.ReadLine();
                     if(player_name == ""){
-                        Player player = new Player("Unknown");
-                        Player1 = player;
+                        player.Update_Name("Unknown");
                     }else if(player_name != null){
-                        Player player = new Player(player_name);
-                        Player1 = player;
+                        player.Update_Name(player_name);
                     }else {
-                        Player player = new Player("Unknown");
-                        Player1 = player;
+                        player.Update_Name("Unknown");
                     }
                     Console.Clear();
         }
@@ -431,19 +428,19 @@ namespace ConsoleRPG{
             switch(Console.ReadLine()){
                         case "1":
                         Weapon Sword = new Weapon("Sword", 30 , 0);
-                        Player1.Equip_Weapon(Sword);
+                        player.Equip_Weapon(Sword);
                         Console.Clear();
                         break;
 
                         case "2":
                         Weapon Bow = new Weapon("Bow", 15, 15);
-                        Player1.Equip_Weapon(Bow);
+                        player.Equip_Weapon(Bow);
                         Console.Clear();
                         break;
 
                         case "3":
                         Weapon MagicStaff = new Weapon("Magic Staff", 0, 30);
-                        Player1.Equip_Weapon(MagicStaff);
+                        player.Equip_Weapon(MagicStaff);
                         Console.Clear();
                         break;
 
@@ -463,19 +460,19 @@ namespace ConsoleRPG{
             switch(Console.ReadLine()){
                         case "1":
                         Armor LeatherArmor = new Armor("Leather Armor", 3 , 0.5);
-                        Player1.Equip_Armor(LeatherArmor);
+                        player.Equip_Armor(LeatherArmor);
                         Console.Clear();
                         break;
 
                         case "2":
                         Armor MagicalLizardLeatherArmor = new Armor("Magical Lizard Leather Armor", 2, 2);
-                        Player1.Equip_Armor(MagicalLizardLeatherArmor);
+                        player.Equip_Armor(MagicalLizardLeatherArmor);
                         Console.Clear();
                         break;
 
                         case "3":
                         Armor MageRobe = new Armor("Mage Robe", 0.5, 3);
-                        Player1.Equip_Armor(MageRobe);
+                        player.Equip_Armor(MageRobe);
                         Console.Clear();
                         break;
 
@@ -492,7 +489,7 @@ namespace ConsoleRPG{
             Console.WriteLine("[1] - Explore");
             Console.WriteLine("[2] - Check Inventory");
             Console.WriteLine("[3] - Check Player stats");
-            Console.WriteLine("[4] - Mend Wounds ("+ Player1.Mend_Wounds_Charges +" charges left)");
+            Console.WriteLine("[4] - Mend Wounds ("+ player.Mend_Wounds_Charges +" charges left)");
             Console.WriteLine("[5] - Quit Game");
 
             switch(Console.ReadLine()){
@@ -539,11 +536,11 @@ namespace ConsoleRPG{
         }
 
         static void Player_Heal(){
-            if(Player1.Current_HP != Player1.HP_Max){
-                if (Player1.Mend_Wounds_Charges > 0){
-                    Console.WriteLine("You had "+ Player1.Current_HP +" HP / " + Player1.HP_Max + " HP.");
-                    Player1.Mend_Wounds();
-                    Console.WriteLine("You now have "+ Player1.Current_HP +" HP / " + Player1.HP_Max + " HP\n");
+            if(player.Current_HP != player.HP_Max){
+                if (player.Mend_Wounds_Charges > 0){
+                    Console.WriteLine("You had "+ player.Current_HP +" HP / " + player.HP_Max + " HP.");
+                    player.Mend_Wounds();
+                    Console.WriteLine("You now have "+ player.Current_HP +" HP / " + player.HP_Max + " HP\n");
                     Console.WriteLine("Press enter to continue..");
                     Console.ReadLine();
                     Console.Clear();
@@ -566,23 +563,23 @@ namespace ConsoleRPG{
 
         static void ShowPlayer_Stats(){
             Console.WriteLine("Here is a summary of your stats:");
-            Console.WriteLine("\nPlayer: "+ Player1.Name );
+            Console.WriteLine("\nPlayer: "+ player.Name );
 
-            Console.WriteLine("Level: "+ Player1.Level);
-            Console.WriteLine("XP: "+ Player1.XP+ "/" + Player1.Required_XP);
-            Console.WriteLine("Upgrade Points available: " + Player1.Upgrade_Points);
-            Console.WriteLine("HP: "+ Player1.Current_HP +"/"+ Player1.HP_Max);
+            Console.WriteLine("Level: "+ player.Level);
+            Console.WriteLine("XP: "+ player.XP+ "/" + player.Required_XP);
+            Console.WriteLine("Upgrade Points available: " + player.Upgrade_Points);
+            Console.WriteLine("HP: "+ player.Current_HP +"/"+ player.HP_Max);
 
             Console.WriteLine("\nStats:");
-            Console.WriteLine("Vitality : "+ Player1.Vitality_Stat);
-            Console.WriteLine("Strength : "+ Player1.Strength_Stat);
-            Console.WriteLine("Intelligence : "+ Player1.Intelligence_Stat);
-            Console.WriteLine("Speed : "+ Player1.Speed_Stat);
-            Console.WriteLine("\nArmor : "+ Player1.Armor_Stat);
+            Console.WriteLine("Vitality : "+ player.Vitality_Stat);
+            Console.WriteLine("Strength : "+ player.Strength_Stat);
+            Console.WriteLine("Intelligence : "+ player.Intelligence_Stat);
+            Console.WriteLine("Speed : "+ player.Speed_Stat);
+            Console.WriteLine("\nArmor : "+ player.Armor_Stat);
 
-            Console.WriteLine("Magic Resistance : "+ Player1.Magical_Resistance_Stat);
-            Console.WriteLine("Physical Attack : "+ Player1.Physical_Attack_Stat);
-            Console.WriteLine("Magical Attack : "+ Player1.Magical_Attack_Stat);
+            Console.WriteLine("Magic Resistance : "+ player.Magical_Resistance_Stat);
+            Console.WriteLine("Physical Attack : "+ player.Physical_Attack_Stat);
+            Console.WriteLine("Magical Attack : "+ player.Magical_Attack_Stat);
 
             Console.WriteLine("\n[1] - Level up");
             Console.WriteLine("[2] - Back");
@@ -612,18 +609,18 @@ namespace ConsoleRPG{
 
         static void ShowPlayer_Inventory(){
             Console.WriteLine("You go through your inventory.");
-            if(Player1.CheckifArmed()){
-                Console.WriteLine("Your equipped weapon: "+ Player1.Worn_Weapons[0].Name + " (" + Player1.Worn_Weapons[0].Attack_Damage + " physical damage / " + Player1.Worn_Weapons[0].Magical_Damage + " magical damage)");
+            if(player.CheckifArmed()){
+                Console.WriteLine("Your equipped weapon: "+ player.Worn_Weapons[0].Name + " (" + player.Worn_Weapons[0].Attack_Damage + " physical damage / " + player.Worn_Weapons[0].Magical_Damage + " magical damage)");
             }else{
                 Console.WriteLine("Your equipped weapon: None\n");
             }
-            if(Player1.CheckifArmored()){
-                Console.WriteLine("Your equipped armor: " + Player1.Worn_Armor[0].Name + " (" + Player1.Worn_Armor[0].Armor_Points + " armor / " + Player1.Worn_Armor[0].Magical_Resistance + " magical resistance)\n");
+            if(player.CheckifArmored()){
+                Console.WriteLine("Your equipped armor: " + player.Worn_Armor[0].Name + " (" + player.Worn_Armor[0].Armor_Points + " armor / " + player.Worn_Armor[0].Magical_Resistance + " magical resistance)\n");
             }else{
                 Console.WriteLine("Your equipped armor: None\n");
             }
             Console.WriteLine("Your inventory: ");
-            foreach(Item item in Player1.Inventory){
+            foreach(Item item in player.Inventory){
                 Console.WriteLine("- "+ item.Name);
             }
             Console.WriteLine("\n[1] - Mangage Weapons");
@@ -658,18 +655,18 @@ namespace ConsoleRPG{
         }
 
         static void Manage_Weapons(){
-            if(Player1.CheckifArmed()){
-                Console.WriteLine("Your equipped weapon: "+ Player1.Worn_Weapons[0].Name + " (" + Player1.Worn_Weapons[0].Attack_Damage + " physical damage / " + Player1.Worn_Weapons[0].Magical_Damage + " magical damage)");
+            if(player.CheckifArmed()){
+                Console.WriteLine("Your equipped weapon: "+ player.Worn_Weapons[0].Name + " (" + player.Worn_Weapons[0].Attack_Damage + " physical damage / " + player.Worn_Weapons[0].Magical_Damage + " magical damage)");
             }else{
                 Console.WriteLine("Your equipped weapon: None\n");
             }
-            if(Player1.CheckifArmored()){
-                Console.WriteLine("Your equipped armor: " + Player1.Worn_Armor[0].Name + " (" + Player1.Worn_Armor[0].Armor_Points + " armor / " + Player1.Worn_Armor[0].Magical_Resistance + " magical resistance)\n");
+            if(player.CheckifArmored()){
+                Console.WriteLine("Your equipped armor: " + player.Worn_Armor[0].Name + " (" + player.Worn_Armor[0].Armor_Points + " armor / " + player.Worn_Armor[0].Magical_Resistance + " magical resistance)\n");
             }else{
                 Console.WriteLine("Your equipped armor: None\n");
             }
             Console.WriteLine("Your inventory: ");
-            foreach(Item weapon in Player1.Inventory){
+            foreach(Item weapon in player.Inventory){
                 if(weapon is Weapon){
                     Console.WriteLine("- "+ weapon.Name);
                 }
@@ -685,9 +682,9 @@ namespace ConsoleRPG{
                 break;
 
                 case "2":
-                if(Player1.Worn_Weapons.Count != 0){
+                if(player.Worn_Weapons.Count != 0){
                     Console.Clear();
-                    Player1.Unequip_Weapon(Player1.Worn_Weapons[0]);
+                    player.Unequip_Weapon(player.Worn_Weapons[0]);
                     Update_Gamestate(Gamestates[0]);
                 }else{
                     Console.Clear();
@@ -696,7 +693,7 @@ namespace ConsoleRPG{
                 break;
 
                 case "3":
-                if(Player1.Worn_Weapons.Count != 0){
+                if(player.Worn_Weapons.Count != 0){
                     Console.Clear();
                     Discard_Weapon();
                 }else{
@@ -720,18 +717,18 @@ namespace ConsoleRPG{
         }
 
         static void Manage_Armors(){
-            if(Player1.CheckifArmed()){
-                Console.WriteLine("Your equipped weapon: "+ Player1.Worn_Weapons[0].Name + " (" + Player1.Worn_Weapons[0].Attack_Damage + " physical damage / " + Player1.Worn_Weapons[0].Magical_Damage + " magical damage)");
+            if(player.CheckifArmed()){
+                Console.WriteLine("Your equipped weapon: "+ player.Worn_Weapons[0].Name + " (" + player.Worn_Weapons[0].Attack_Damage + " physical damage / " + player.Worn_Weapons[0].Magical_Damage + " magical damage)");
             }else{
                 Console.WriteLine("Your equipped weapon: None\n");
             }
-            if(Player1.CheckifArmored()){
-                Console.WriteLine("Your equipped armor: " + Player1.Worn_Armor[0].Name + " (" + Player1.Worn_Armor[0].Armor_Points + " armor / " + Player1.Worn_Armor[0].Magical_Resistance + " magical resistance)\n");
+            if(player.CheckifArmored()){
+                Console.WriteLine("Your equipped armor: " + player.Worn_Armor[0].Name + " (" + player.Worn_Armor[0].Armor_Points + " armor / " + player.Worn_Armor[0].Magical_Resistance + " magical resistance)\n");
             }else{
                 Console.WriteLine("Your equipped armor: None\n");
             }
             Console.WriteLine("Your inventory: ");
-            foreach(Item armor in Player1.Inventory){
+            foreach(Item armor in player.Inventory){
                 if(armor is Armor){
                     Console.WriteLine("- "+ armor.Name);
                 }
@@ -747,9 +744,9 @@ namespace ConsoleRPG{
                 break;
 
                 case "2":
-                if(Player1.Worn_Armor.Count == 1 ){
+                if(player.Worn_Armor.Count == 1 ){
                     Console.Clear();
-                    Player1.Unequip_Armor(Player1.Worn_Armor[0]);
+                    player.Unequip_Armor(player.Worn_Armor[0]);
                     Update_Gamestate(Gamestates[0]);
                 }else{
                     Console.Clear();
@@ -758,7 +755,7 @@ namespace ConsoleRPG{
                 break;
 
                 case "3":
-                if(Player1.Worn_Armor.Count == 1){
+                if(player.Worn_Armor.Count == 1){
                     Console.Clear();
                     Discard_Armor();
                     Update_Gamestate(Gamestates[0]);
@@ -783,18 +780,18 @@ namespace ConsoleRPG{
         }
 
         static void Manage_Items(){
-            if(Player1.CheckifArmed()){
-                Console.WriteLine("Your equipped weapon: "+ Player1.Worn_Weapons[0].Name + " (" + Player1.Worn_Weapons[0].Attack_Damage + " physical damage / " + Player1.Worn_Weapons[0].Magical_Damage + " magical damage)");
+            if(player.CheckifArmed()){
+                Console.WriteLine("Your equipped weapon: "+ player.Worn_Weapons[0].Name + " (" + player.Worn_Weapons[0].Attack_Damage + " physical damage / " + player.Worn_Weapons[0].Magical_Damage + " magical damage)");
             }else{
                 Console.WriteLine("Your equipped weapon: None\n");
             }
-            if(Player1.CheckifArmored()){
-                Console.WriteLine("Your equipped armor: " + Player1.Worn_Armor[0].Name + " (" + Player1.Worn_Armor[0].Armor_Points + " armor / " + Player1.Worn_Armor[0].Magical_Resistance + " magical resistance)\n");
+            if(player.CheckifArmored()){
+                Console.WriteLine("Your equipped armor: " + player.Worn_Armor[0].Name + " (" + player.Worn_Armor[0].Armor_Points + " armor / " + player.Worn_Armor[0].Magical_Resistance + " magical resistance)\n");
             }else{
                 Console.WriteLine("Your equipped armor: None\n");
             }
             Console.WriteLine("Your inventory: ");
-            foreach(Item item in Player1.Inventory){
+            foreach(Item item in player.Inventory){
                 Console.WriteLine("- "+ item.Name);
             }
             Console.WriteLine("\n[1] - Use item (not available yet)");
@@ -807,7 +804,7 @@ namespace ConsoleRPG{
                 break;
 
                 case "2":
-                if(Player1.Inventory.Count != 0){
+                if(player.Inventory.Count != 0){
                     Discard_Item();
                     Update_Gamestate(Gamestates[0]);
                 }else{
@@ -834,7 +831,7 @@ namespace ConsoleRPG{
             Console.Clear();
             Console.WriteLine("Your inventory: ");
             int a = 0;
-            foreach(Item item in Player1.Inventory){
+            foreach(Item item in player.Inventory){
                 Console.WriteLine("["+ a++ +"] - "+ item.Name);
             }
             Console.WriteLine("\nType the number of the item you want to discard : ");
@@ -851,7 +848,7 @@ namespace ConsoleRPG{
                 Console.WriteLine("Please type a number\n");
                 Discard_Item();
                 }
-                Player1.Discard_Item(Player1.Inventory[Convert.ToInt32(b)]);
+                player.Discard_Item(player.Inventory[Convert.ToInt32(b)]);
             }
         }
 
@@ -862,7 +859,7 @@ namespace ConsoleRPG{
             Console.WriteLine("[2] - No");
             switch(Console.ReadLine()){
                 case "1":
-                Player1.Discard_Armor(Player1.Worn_Armor[0]);
+                player.Discard_Armor(player.Worn_Armor[0]);
                 Console.Clear();
                 Update_Gamestate(Gamestates[0]);
                 break;
@@ -883,7 +880,7 @@ namespace ConsoleRPG{
             Console.WriteLine("[2] - No");
             switch(Console.ReadLine()){
                 case "1":
-                Player1.Discard_Weapon(Player1.Worn_Weapons[0]);
+                player.Discard_Weapon(player.Worn_Weapons[0]);
                 Console.Clear();
                 Update_Gamestate(Gamestates[0]);
                 break;
@@ -902,9 +899,9 @@ namespace ConsoleRPG{
             Console.Clear();
             Console.WriteLine("Your Inventory: ");
             List<int> AvailableIndexes = new List<int>();
-            foreach (Item weapon in Player1.Inventory){
+            foreach (Item weapon in player.Inventory){
                 if(weapon is Weapon){
-                    int b = Player1.Inventory.IndexOf(weapon);
+                    int b = player.Inventory.IndexOf(weapon);
                     Console.WriteLine("["+ b + "] - "+ weapon.Name);
                     AvailableIndexes.Add(b);
                 }
@@ -924,8 +921,8 @@ namespace ConsoleRPG{
                 Equip_Weapon();
                 }
                 if(AvailableIndexes.Contains(Convert.ToInt32(a))){
-                        Player1.Equip_Weapon(Player1.Inventory[Convert.ToInt32(a)] as Weapon);
-                        Player1.Discard_Item(Player1.Inventory[Convert.ToInt32(a)]);
+                        player.Equip_Weapon(player.Inventory[Convert.ToInt32(a)] as Weapon);
+                        player.Discard_Item(player.Inventory[Convert.ToInt32(a)]);
                     Console.Clear();
                     Update_Gamestate(Gamestates[0]);
                 }else{
@@ -939,9 +936,9 @@ namespace ConsoleRPG{
             Console.Clear();
             Console.WriteLine("Your Inventory: ");
             List<int> AvailableIndexes = new List<int>();
-            foreach (Item armor in Player1.Inventory){
+            foreach (Item armor in player.Inventory){
                 if(armor is Armor){
-                    int b = Player1.Inventory.IndexOf(armor);
+                    int b = player.Inventory.IndexOf(armor);
                     Console.WriteLine("["+ b + "] - "+ armor.Name);
                     AvailableIndexes.Add(b);
                 }
@@ -961,8 +958,8 @@ namespace ConsoleRPG{
                 Equip_Weapon();
                 }
                 if(AvailableIndexes.Contains(Convert.ToInt32(a))){
-                    Player1.Equip_Armor(Player1.Inventory[Convert.ToInt32(a)]! as Armor);
-                    Player1.Discard_Item(Player1.Inventory[Convert.ToInt32(a)]);
+                    player.Equip_Armor(player.Inventory[Convert.ToInt32(a)]! as Armor);
+                    player.Discard_Item(player.Inventory[Convert.ToInt32(a)]);
                     Console.Clear();
                     Update_Gamestate(Gamestates[0]);
                 }else{
@@ -973,23 +970,23 @@ namespace ConsoleRPG{
         }
 
         static void LevelUp_Screen(){
-            Console.WriteLine("\nPlayer: "+ Player1.Name );
+            Console.WriteLine("\nPlayer: "+ player.Name );
 
-            Console.WriteLine("Level: "+ Player1.Level);
-            Console.WriteLine("XP: "+ Player1.XP+ "/" + Player1.Required_XP);
-            Console.WriteLine("Upgrade Points available: " + Player1.Upgrade_Points);
-            Console.WriteLine("HP: "+ Player1.Current_HP +"/"+ Player1.HP_Max);
+            Console.WriteLine("Level: "+ player.Level);
+            Console.WriteLine("XP: "+ player.XP+ "/" + player.Required_XP);
+            Console.WriteLine("Upgrade Points available: " + player.Upgrade_Points);
+            Console.WriteLine("HP: "+ player.Current_HP +"/"+ player.HP_Max);
 
-            Console.WriteLine("\nArmor : "+ Player1.Armor_Stat);
-            Console.WriteLine("Magic Resistance : "+ Player1.Magical_Resistance_Stat);
-            Console.WriteLine("Physical Attack : "+ Player1.Physical_Attack_Stat);
-            Console.WriteLine("Magical Attack : "+ Player1.Magical_Attack_Stat);
+            Console.WriteLine("\nArmor : "+ player.Armor_Stat);
+            Console.WriteLine("Magic Resistance : "+ player.Magical_Resistance_Stat);
+            Console.WriteLine("Physical Attack : "+ player.Physical_Attack_Stat);
+            Console.WriteLine("Magical Attack : "+ player.Magical_Attack_Stat);
 
             Console.WriteLine("\nStats: Choose which one to upgrade");
-            Console.WriteLine("[1] - Vitality : "+ Player1.Vitality_Stat);
-            Console.WriteLine("[2] - Strength : "+ Player1.Strength_Stat);
-            Console.WriteLine("[3] - Intelligence : "+ Player1.Intelligence_Stat);
-            Console.WriteLine("[4] - Speed : "+ Player1.Speed_Stat + "\n");
+            Console.WriteLine("[1] - Vitality : "+ player.Vitality_Stat);
+            Console.WriteLine("[2] - Strength : "+ player.Strength_Stat);
+            Console.WriteLine("[3] - Intelligence : "+ player.Intelligence_Stat);
+            Console.WriteLine("[4] - Speed : "+ player.Speed_Stat + "\n");
             Console.WriteLine("[5] - Back");
 
             switch(Console.ReadLine()){
@@ -1027,7 +1024,7 @@ namespace ConsoleRPG{
         static void LevelUp_Vitality(){
             Console.WriteLine("You want to upgrade Vitality\n");
             Console.WriteLine("Type how many points you want to add: ");
-            Console.WriteLine("Upgrade Points available: " + Player1.Upgrade_Points);
+            Console.WriteLine("Upgrade Points available: " + player.Upgrade_Points);
             Console.WriteLine("Type 'back' to go cancel.\n");
             var points = Console.ReadLine();
             if(points == "back"){
@@ -1042,8 +1039,8 @@ namespace ConsoleRPG{
                     Console.WriteLine("Please type either a number or 'back'.\n");
                     LevelUp_Vitality();
                 }
-                if(Player1.Upgrade_Points > 0){
-                    Player1.Upgrade_Vitality(Convert.ToInt32(points));
+                if(player.Upgrade_Points > 0){
+                    player.Upgrade_Vitality(Convert.ToInt32(points));
                     Console.Clear();
                     Update_Gamestate(Gamestates[0]);
                 }else{
@@ -1059,7 +1056,7 @@ namespace ConsoleRPG{
         static void LevelUp_Strength(){
             Console.WriteLine("You want to upgrade Strength\n");
             Console.WriteLine("Type how many points you want to add: ");
-            Console.WriteLine("Upgrade Points available: " + Player1.Upgrade_Points);
+            Console.WriteLine("Upgrade Points available: " + player.Upgrade_Points);
             var points = Console.ReadLine();
             if(points == "back"){
                 Console.Clear();
@@ -1073,8 +1070,8 @@ namespace ConsoleRPG{
                     Console.WriteLine("Please type either a number or 'back'.\n");
                     LevelUp_Strength();
                 }
-                if(Player1.Upgrade_Points > 0){
-                    Player1.Upgrade_Strength(Convert.ToInt32(points));
+                if(player.Upgrade_Points > 0){
+                    player.Upgrade_Strength(Convert.ToInt32(points));
                     Console.Clear();
                     Update_Gamestate(Gamestates[0]);
                 }else{
@@ -1090,7 +1087,7 @@ namespace ConsoleRPG{
         static void LevelUp_Intelligence(){
             Console.WriteLine("You want to upgrade Intelligence\n");
             Console.WriteLine("Type how many points you want to add: ");
-            Console.WriteLine("Upgrade Points available: " + Player1.Upgrade_Points);
+            Console.WriteLine("Upgrade Points available: " + player.Upgrade_Points);
             var points = Console.ReadLine();
             if(points == "back"){
                 Console.Clear();
@@ -1104,8 +1101,8 @@ namespace ConsoleRPG{
                     Console.WriteLine("Please type either a number or 'back'.\n");
                     LevelUp_Intelligence();
                 }
-                if(Player1.Upgrade_Points > 0){
-                    Player1.Upgrade_Intelligence(Convert.ToInt32(points));
+                if(player.Upgrade_Points > 0){
+                    player.Upgrade_Intelligence(Convert.ToInt32(points));
                     Console.Clear();
                     Update_Gamestate(Gamestates[0]);
                 }else{
@@ -1121,7 +1118,7 @@ namespace ConsoleRPG{
         static void LevelUp_Speed(){
             Console.WriteLine("You want to upgrade Speed\n");
             Console.WriteLine("Type how many points you want to add: ");
-            Console.WriteLine("Upgrade Points available: " + Player1.Upgrade_Points);
+            Console.WriteLine("Upgrade Points available: " + player.Upgrade_Points);
             var points = Console.ReadLine();
             if(points == "back"){
                 Console.Clear();
@@ -1135,8 +1132,8 @@ namespace ConsoleRPG{
                     Console.WriteLine("Please type either a number or 'back'.\n");
                     LevelUp_Speed();
                 }
-                if(Player1.Upgrade_Points > 0){
-                    Player1.Upgrade_Speed(Convert.ToInt32(points));
+                if(player.Upgrade_Points > 0){
+                    player.Upgrade_Speed(Convert.ToInt32(points));
                     Console.Clear();
                     Update_Gamestate(Gamestates[0]);
                 }else{
