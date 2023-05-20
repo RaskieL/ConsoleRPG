@@ -299,7 +299,7 @@ namespace ConsoleRPG{
                 case "1":
                 Console.Clear();
                 player.Attack_Enemy(enemy);
-                Console.WriteLine($"You attacked the {enemy.Name}\nPress Enter to continuer.");
+                Console.WriteLine($"You attacked the {enemy.Name}\nPress Enter to continue.");
                 Console.ReadLine();
                 break;
 
