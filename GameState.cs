@@ -1,16 +1,28 @@
-namespace ConsoleRPG{
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System;
+using System.Linq;
 
+
+namespace ConsoleRPG{
     public class GameState{
         static public List<string> Gamestates = new List<string>{};
         static public List<Enemy> Available_Enemies = new List<Enemy>();
+        static public Player player = new Player();
 
-        static public Player player = new Player("Unknown");
+        static PlayersContext db = new PlayersContext();
         static public void Update_Gamestate(string gamestate){
             switch(gamestate){
 
                 case "Menu":
                 Console.Clear();
                 Menu();
+                break;
+
+                case "Load Menu":
+                Console.Clear();
+                LoadMenu();
                 break;
 
                 case "Exploration":
@@ -76,6 +88,42 @@ namespace ConsoleRPG{
                 Update_Gamestate(Gamestates[0]);
                 break;
             }
+        }
+
+        static void LoadMenu(){
+            Console.Clear();
+            Console.WriteLine("Save Files:\n");
+            foreach (Player p in db.Players){
+                int b = db.Players.ToList().IndexOf(p);
+                Console.WriteLine($"[{b}] - {p.Name}");
+            }
+            Console.WriteLine("\nType the ID of the save file you want to load.");
+            Console.WriteLine("Type 'back' to go back to the Main Menu.");
+            string? a = Console.ReadLine();
+            if(a is not null && a.ToLower() == "back"){
+                Console.Clear();
+                Gamestates.Remove("Load Menu");
+                Gamestates.Add("Main Menu");
+                Update_Gamestate(Gamestates[0]);
+            }else{
+                try{
+                    int c = Convert.ToInt32(a);
+                }catch(System.FormatException){
+                    LoadMenu();
+                }
+            }
+            int d = Convert.ToInt32(a);
+            try{
+                player = db.Players.ToList()[d];
+            }catch(System.ArgumentOutOfRangeException){
+                LoadMenu();
+            }
+            Console.WriteLine($"You loaded {player.Name}.");
+            Console.WriteLine("Press enter to continue.");
+            Console.ReadLine();
+            Gamestates.Remove("Load Menu");
+            Gamestates.Add("Menu");
+            Update_Gamestate(Gamestates[0]);
         }
 
         static void Explore(){
@@ -199,8 +247,9 @@ namespace ConsoleRPG{
                         if(player.IsAlive){
                             Console.Clear();
                             player.Gain_XP(CurrentEnemy.XP_Reward);
+                            player.Earn_Money(CurrentEnemy.Money_Reward);
                             player.Update_Mend_Wounds_Charges();
-                            Console.WriteLine($"Awesome ! You vanquished the enemy {CurrentEnemy.Name} and gained {CurrentEnemy.XP_Reward} !");
+                            Console.WriteLine($"Awesome ! You vanquished the enemy {CurrentEnemy.Name}! You gained {CurrentEnemy.XP_Reward} XP and earned {CurrentEnemy.Money_Reward} gold coins !");
                             Console.WriteLine("Press enter to continue.");
                             Console.ReadLine();
                             Gamestates.Remove("Combat");
@@ -210,6 +259,7 @@ namespace ConsoleRPG{
                             Console.Clear();
                             Console.WriteLine("You died.\n");
                             Console.WriteLine("Press enter to continue.");
+                            Console.ReadLine();
                             Environment.Exit(0);
                         }
                     }
@@ -219,7 +269,8 @@ namespace ConsoleRPG{
                         if(player.IsAlive){
                             Console.Clear();
                             player.Gain_XP(CurrentEnemy.XP_Reward);
-                            Console.WriteLine($"Awesome ! You vanquished the enemy {CurrentEnemy.Name} and gained {CurrentEnemy.XP_Reward} !");
+                            player.Earn_Money(CurrentEnemy.Money_Reward);
+                            Console.WriteLine($"Awesome ! You vanquished the enemy {CurrentEnemy.Name}! You gained {CurrentEnemy.XP_Reward} XP and earned {CurrentEnemy.Money_Reward} gold coins !");
                             Console.WriteLine("Press enter to continue.");
                             Console.ReadLine();
                             Gamestates.Remove("Combat");
@@ -229,6 +280,7 @@ namespace ConsoleRPG{
                             Console.Clear();
                             Console.WriteLine("You died.\n");
                             Console.WriteLine("Press enter to continue.");
+                            Console.ReadLine();
                             Environment.Exit(0);
                         }
                     }
@@ -241,8 +293,9 @@ namespace ConsoleRPG{
                         if(player.IsAlive){
                             Console.Clear();
                             player.Gain_XP(CurrentEnemy.XP_Reward);
+                            player.Earn_Money(CurrentEnemy.Money_Reward);
                             player.Update_Mend_Wounds_Charges();
-                            Console.WriteLine($"Awesome ! You vanquished the enemy {CurrentEnemy.Name} and gained {CurrentEnemy.XP_Reward} !");
+                            Console.WriteLine($"Awesome ! You vanquished the enemy {CurrentEnemy.Name}! You gained {CurrentEnemy.XP_Reward} XP and earned {CurrentEnemy.Money_Reward} gold coins !");
                             Console.WriteLine("Press enter to continue.");
                             Console.ReadLine();
                             Gamestates.Remove("Combat");
@@ -252,6 +305,7 @@ namespace ConsoleRPG{
                             Console.Clear();
                             Console.WriteLine("You died.\n");
                             Console.WriteLine("Press enter to continue.");
+                            Console.ReadLine();
                             Environment.Exit(0);
                         }
                     }
@@ -261,8 +315,9 @@ namespace ConsoleRPG{
                         if(player.IsAlive){
                             Console.Clear();
                             player.Gain_XP(CurrentEnemy.XP_Reward);
+                            player.Earn_Money(CurrentEnemy.Money_Reward);
                             player.Update_Mend_Wounds_Charges();
-                            Console.WriteLine($"Awesome ! You vanquished the enemy {CurrentEnemy.Name} and gained {CurrentEnemy.XP_Reward} !");
+                            Console.WriteLine($"Awesome ! You vanquished the enemy {CurrentEnemy.Name}! You gained {CurrentEnemy.XP_Reward} XP and earned {CurrentEnemy.Money_Reward} gold coins !");
                             Console.WriteLine("Press enter to continue.");
                             Console.ReadLine();
                             Gamestates.Remove("Combat");
@@ -272,6 +327,7 @@ namespace ConsoleRPG{
                             Console.Clear();
                             Console.WriteLine("You died.\n");
                             Console.WriteLine("Press enter to continue.");
+                            Console.ReadLine();
                             Environment.Exit(0);
                         }
                     }
@@ -381,8 +437,9 @@ namespace ConsoleRPG{
         static public void Main_Menu(){
             Console.WriteLine("Welcome to the main menu of the demo !");
             Console.WriteLine("Choose what you want to do :");
-            Console.WriteLine("[1] - Play");
-            Console.WriteLine("[2] - Quit Game");
+            Console.WriteLine("[1] - New Game");
+            Console.WriteLine("[2] - Load Game");
+            Console.WriteLine("[3] - Quit Game");
 
             switch(Console.ReadLine()){
 
@@ -393,8 +450,15 @@ namespace ConsoleRPG{
                         break;
 
                         case "2":
+                        Gamestates.Remove("Main Menu");
+                        Gamestates.Add("Load Menu");
+                        Update_Gamestate(Gamestates[0]);
+                        break;
+
+                        case "3":
                         Console.Clear();
                         Console.WriteLine("Thank you for playing !");
+                        Console.ReadLine();
                         Environment.Exit(0);
                         break;
 
@@ -406,6 +470,7 @@ namespace ConsoleRPG{
         }
 
         static public void Character_Creation(){
+            player.Player_Reset();
             Console.WriteLine("Enter your character's name:");
                 string? player_name = Console.ReadLine();
                     if(player_name == ""){
@@ -489,7 +554,9 @@ namespace ConsoleRPG{
             Console.WriteLine("[2] - Check Inventory");
             Console.WriteLine("[3] - Check Player stats");
             Console.WriteLine($"[4] - Mend Wounds ({player.Mend_Wounds_Charges} charges left)");
-            Console.WriteLine("[5] - Quit Game");
+            Console.WriteLine("[5] - Save Game");
+            Console.WriteLine("[6] - Return to Main Menu");
+            Console.WriteLine("[7] - Quit Game");
 
             switch(Console.ReadLine()){
 
@@ -521,8 +588,37 @@ namespace ConsoleRPG{
                         break;
 
                         case "5":
+                            if(db.Players.ToList().Contains(player)){
+                                Console.Clear();
+                                Console.WriteLine("Saving..");
+                                db.Players.Remove(player);
+                                db.Players.Add(player);
+                                Console.WriteLine("Saved !");
+                                Console.WriteLine("Press enter to continue.");
+                                Console.ReadLine();
+                                Update_Gamestate(Gamestates[0]);
+                            }else{
+                                Console.Clear();
+                                Console.WriteLine("Saving..");
+                                db.Players.Add(player);
+                                Console.WriteLine("Saved !");
+                                Console.WriteLine("Press enter to continue.");
+                                Console.ReadLine();
+                                Update_Gamestate(Gamestates[0]);
+                            }
+                        break;
+
+                        case "6":
+                        Console.Clear();
+                        Gamestates.Remove("Menu");
+                        Gamestates.Add("Main Menu");
+                        Update_Gamestate(Gamestates[0]);
+                        break;
+
+                        case "7":
                         Console.Clear();
                         Console.WriteLine("Thank you for playing !");
+                        Console.ReadLine();
                         Environment.Exit(0);
                         break;
 
@@ -929,9 +1025,10 @@ namespace ConsoleRPG{
                 Console.WriteLine("Please type a number\n");
                 Equip_Weapon();
                 }
-                if(AvailableIndexes.Contains(Convert.ToInt32(a))){
-                        player.Equip_Weapon(player.Inventory[Convert.ToInt32(a)] as Weapon);
-                        player.Discard_Item(player.Inventory[Convert.ToInt32(a)]);
+                int b = Convert.ToInt32(a);
+                if(AvailableIndexes.Contains(b)){
+                    player.Equip_Weapon(player.Inventory[b] as Weapon);
+                    player.Discard_Item(player.Inventory[b]);
                     Console.Clear();
                     Update_Gamestate(Gamestates[0]);
                 }else{
