@@ -1,9 +1,16 @@
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+
+
 namespace ConsoleRPG{
    public class Item {
 
         private static int currentID;
-        public string Name;
-        protected int ID {get; set;}
+        public string Name {get; set;}
+        public int ID {get; set;}
 
         public Item(){
             ID = 0;
@@ -25,8 +32,8 @@ namespace ConsoleRPG{
 
     public class Armor : Item {
 
-        public double Armor_Points;
-        public double Magical_Resistance;
+        public double Armor_Points {get; set;}
+        public double Magical_Resistance {get; set;}
 
         public Armor(){
             this.Armor_Points = 1;
@@ -40,8 +47,8 @@ namespace ConsoleRPG{
         }
     }
     public class Weapon : Item {
-        public int Attack_Damage;
-        public int Magical_Damage;
+        public int Attack_Damage {get; set;}
+        public int Magical_Damage {get; set;}
 
         public Weapon(){
             this.Attack_Damage = 1;

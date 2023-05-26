@@ -1,3 +1,10 @@
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+
+
 namespace ConsoleRPG{
     public class Enemy {
         private static int currentID;

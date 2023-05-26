@@ -1,40 +1,47 @@
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+
+
 namespace ConsoleRPG{
     public class Player
     {
-        public Player(string name)
+        public int Id {get; set;}
+        public Player()
         {
-            this.Name = name;
             Level = Vitality_Stat + Strength_Stat + Intelligence_Stat + Speed_Stat - 3;
         }
-        public string Name;
-        public int Required_XP = 1000;
-        public int XP = 0;
-        public int Upgrade_Points = 0;
-        public int HP_Max = 100;
-        public int Current_HP = 100;
-        public bool IsAlive = true;
+        public string Name {get; set;} = "";
+        public int Required_XP {get; set;} = 1000;
+        public int XP {get; set;} = 0;
+        public int Upgrade_Points {get; set;} = 0;
+        public int HP_Max {get; set;} = 100;
+        public int Current_HP {get; set;} = 100;
+        public bool IsAlive {get; set;} = true;
 
-        public int Vitality_Stat = 1;
-        public int Strength_Stat = 1;
-        public int Intelligence_Stat = 1;
-        public int Speed_Stat = 1;
+        public int Vitality_Stat {get; set;} = 1;
+        public int Strength_Stat {get; set;} = 1;
+        public int Intelligence_Stat {get; set;} = 1;
+        public int Speed_Stat {get; set;} = 1;
 
-        public int Level;
-        public double Armor_Stat = 1;
-        public double Magical_Resistance_Stat = 1;
-        public double Physical_Attack_Stat = 1;
-        public double Magical_Attack_Stat = 1;
-        public int Mend_Wounds_Charges = 1;
+        public int Level {get; set;}
+        public double Armor_Stat {get; set;} = 1;
+        public double Magical_Resistance_Stat {get; set;} = 1;
+        public double Physical_Attack_Stat {get; set;} = 1;
+        public double Magical_Attack_Stat {get; set;} = 1;
+        public int Mend_Wounds_Charges {get; set;} = 1;
 
-        public int Money = 0;
+        public int Money {get; set;} = 0;
 
         public bool IsProtecting = false;
 
-        public List<Item> Inventory = new List<Item>(20);
-        public List<Weapon> Worn_Weapons = new List<Weapon>(1);
-        public List<Armor> Worn_Armor = new List<Armor>(1);
+        public List<Item> Inventory {get; set;} = new List<Item>(20);
+        public List<Weapon> Worn_Weapons {get; set;} = new List<Weapon>(1);
+        public List<Armor> Worn_Armor {get; set;} = new List<Armor>(1);
 
-        public int Current_Room = 1;
+        public int Current_Room {get; set;} = 1;
 
         public void Update_Name(string name)
         {
@@ -106,7 +113,7 @@ namespace ConsoleRPG{
         {
             if (Worn_Armor.Count == 1)
             {
-                Armor_Stat = Worn_Armor[0].Armor_Points + 1;
+                Armor_Stat = Worn_Armor[0].Armor_Points;
             }
             else
             {
@@ -117,7 +124,7 @@ namespace ConsoleRPG{
         {
             if (Worn_Armor.Count == 1)
             {
-                Magical_Resistance_Stat = Worn_Armor[0].Magical_Resistance + 1;
+                Magical_Resistance_Stat = Worn_Armor[0].Magical_Resistance;
             }
             else
             {
@@ -278,6 +285,23 @@ namespace ConsoleRPG{
             if(Mend_Wounds_Charges <=0){
                 Mend_Wounds_Charges += 1;
             }
+        }
+
+        public void Player_Reset(){
+            HP_Max = 100;
+            Current_HP = HP_Max;
+            Required_XP =1000;
+            XP = 0;
+            Current_Room= 1;
+            Upgrade_Points =0;
+            IsAlive = true;
+            Vitality_Stat =1;
+            Strength_Stat = 1;
+            Intelligence_Stat = 1;
+            Speed_Stat = 1;
+            Level = Vitality_Stat + Strength_Stat + Intelligence_Stat + Speed_Stat - 3;
+            Mend_Wounds_Charges = 1;
+            Money = 0;
         }
 
     }
