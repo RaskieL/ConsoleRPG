@@ -5,54 +5,57 @@ using System;
 using System.Linq;
 
 
-namespace ConsoleRPG{
+namespace ConsoleRPG
+{
     public class Player
     {
-        public int Id {get; set;}
+        public int Id { get; set; }
         public Player()
         {
             Level = Vitality_Stat + Strength_Stat + Intelligence_Stat + Speed_Stat - 3;
         }
-        public string Name {get; set;} = "";
-        public int Required_XP {get; set;} = 1000;
-        public int XP {get; set;} = 0;
-        public int Upgrade_Points {get; set;} = 0;
-        public int HP_Max {get; set;} = 100;
-        public int Current_HP {get; set;} = 100;
-        public bool IsAlive {get; set;} = true;
+        public string Name { get; set; } = "";
+        public int Required_XP { get; set; } = 1000;
+        public int XP { get; set; } = 0;
+        public int Upgrade_Points { get; set; } = 0;
+        public int HP_Max { get; set; } = 100;
+        public int Current_HP { get; set; } = 100;
+        public bool IsAlive { get; set; } = true;
 
-        public int Vitality_Stat {get; set;} = 1;
-        public int Strength_Stat {get; set;} = 1;
-        public int Intelligence_Stat {get; set;} = 1;
-        public int Speed_Stat {get; set;} = 1;
+        public int Vitality_Stat { get; set; } = 1;
+        public int Strength_Stat { get; set; } = 1;
+        public int Intelligence_Stat { get; set; } = 1;
+        public int Speed_Stat { get; set; } = 1;
 
-        public int Level {get; set;}
-        public double Armor_Stat {get; set;} = 1;
-        public double Magical_Resistance_Stat {get; set;} = 1;
-        public double Physical_Attack_Stat {get; set;} = 1;
-        public double Magical_Attack_Stat {get; set;} = 1;
-        public int Mend_Wounds_Charges {get; set;} = 1;
+        public int Level { get; set; }
+        public double Armor_Stat { get; set; } = 1;
+        public double Magical_Resistance_Stat { get; set; } = 1;
+        public double Physical_Attack_Stat { get; set; } = 1;
+        public double Magical_Attack_Stat { get; set; } = 1;
+        public int Mend_Wounds_Charges { get; set; } = 1;
 
-        public int Money {get; set;} = 0;
+        public int Money { get; set; } = 0;
 
         public bool IsProtecting = false;
 
-        public List<Item> Inventory {get; set;} = new List<Item>(20);
-        public List<Weapon> Worn_Weapons {get; set;} = new List<Weapon>(1);
-        public List<Armor> Worn_Armor {get; set;} = new List<Armor>(1);
+        public List<Item> Inventory { get; set; } = new List<Item>(20);
+        public List<Weapon> Worn_Weapons { get; set; } = new List<Weapon>(1);
+        public List<Armor> Worn_Armor { get; set; } = new List<Armor>(1);
 
-        public int Current_Room {get; set;} = 1;
+        public int Current_Room { get; set; } = 1;
 
         public void Update_Name(string name)
         {
             Name = name;
         }
 
-        public void Earn_Money(int money){
+        public void Earn_Money(int money)
+        {
             Money += money;
         }
 
-        public void Lose_Money(int money){
+        public void Lose_Money(int money)
+        {
             Money -= money;
         }
         public void Gain_XP(int xp)
@@ -281,27 +284,45 @@ namespace ConsoleRPG{
             IsProtecting = true;
         }
 
-        public void Update_Mend_Wounds_Charges( ){
-            if(Mend_Wounds_Charges <=0){
+        public void Update_Mend_Wounds_Charges()
+        {
+            if (Mend_Wounds_Charges <= 0)
+            {
                 Mend_Wounds_Charges += 1;
             }
         }
 
-        public void Player_Reset(){
+        public void Player_Reset()
+        {
             HP_Max = 100;
             Current_HP = HP_Max;
-            Required_XP =1000;
+            Required_XP = 1000;
             XP = 0;
-            Current_Room= 1;
-            Upgrade_Points =0;
+            Current_Room = 1;
+            Upgrade_Points = 0;
             IsAlive = true;
-            Vitality_Stat =1;
+            Vitality_Stat = 1;
             Strength_Stat = 1;
             Intelligence_Stat = 1;
             Speed_Stat = 1;
             Level = Vitality_Stat + Strength_Stat + Intelligence_Stat + Speed_Stat - 3;
             Mend_Wounds_Charges = 1;
             Money = 0;
+            if (Inventory.Count != 0)
+            {
+                foreach (Item item in Inventory)
+                {
+                    Discard_Item(item);
+                }
+            }
+            if (Worn_Weapons.Count != 0)
+            {
+                Discard_Weapon(Worn_Weapons[0]);
+            }
+            if (Worn_Armor.Count != 0)
+            {
+                Discard_Armor(Worn_Armor[0]);
+            }
         }
 
     }
